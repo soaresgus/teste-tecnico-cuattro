@@ -10,4 +10,6 @@ A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erro
 - Outra dúvida que foi retirada no modo Ask, foi se era valido utilizar validação de schema de body usando Zod quando se trata de Cloud Functions. Como a resposta foi positiva e coerente, prossegui com a implementação.
 
 ## 2. Principais modificações realizadas (API)
+> Seção para listar modificações extras realizadas na API para cumprir os requisitos básicos do desafio
+
 - Apliquei validação de schema de body das requisições usando a biblioteca Zod, para assim garantir uma camada extra de segurança antes mesmo que o erro ocorra no front-end.

@@ -1,6 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { db } from "./admin";
 import { createAtendimentoSchema } from "./schemas/createAtendimentoSchema";
+import { updateAtendimentoStatusSchema } from "./schemas/updateAtendimentoStatusSchema";
 
 /**
  * Function de exemplo — só para você confirmar que o ambiente está rodando.
@@ -58,3 +59,29 @@ export const createAtendimento = onCall(async (request) => {
 
   return { id: doc.id };
 });
+
+export const updateAtendimentoStatus = onCall(async (request) => {
+  const parsed = updateAtendimentoStatusSchema.safeParse(request.data ?? {})
+
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", parsed.error.issues[0]?.message ?? "Erro ao validar os dados do atendimento");
+  }
+
+  const { atendimentoId, tenantId, novoStatus } = parsed.data;
+
+  const doc = await db.collection("atendimentos").doc(atendimentoId).get()
+
+  if (!doc.exists) {
+    throw new HttpsError("not-found", "Atendimento não encontrado");
+  }
+
+  const atendimento = doc.data();
+
+  if (atendimento?.tenantId !== tenantId) {
+    throw new HttpsError("permission-denied", "Você não tem permissão para atualizar este atendimento, pois o tenantId não corresponde ao tenantId do atendimento");
+  }
+
+  await doc.ref.update({ status: novoStatus });
+
+  return { id: doc.id, message: "Status do atendimento atualizado com sucesso" };
+})
