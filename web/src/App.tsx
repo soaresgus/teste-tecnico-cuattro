@@ -1,54 +1,42 @@
 import { useState } from "react";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "./firebase";
-
-type Atendimento = {
-  id: string;
-  transcricao: string;
-  status: string;
-  duracaoSegundos: number;
-};
+import { TenantId } from "./types/tenantId";
+import { Header } from "./components/header";
+import { TenantManager } from "./components/tenant-manager";
+import { Services } from "./components/services";
+import { useServices } from "./hooks/useServices";
+import { NewServiceDialog } from "./components/new-service-dialog";
+import { Footer } from "./components/footer";
 
 export default function App() {
-  const [tenantId, setTenantId] = useState("tenant-alfa");
-  const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
-  const [carregando, setCarregando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  const [tenantId, setTenantId] = useState<TenantId>("tenant-alfa");
+  const { data: services, error } = useServices(tenantId);
 
-  async function carregar() {
-    setCarregando(true);
-    setErro(null);
-    try {
-      const listAtendimentos = httpsCallable(functions, "listAtendimentos");
-      const resp = await listAtendimentos({ tenantId });
-      setAtendimentos((resp.data as { atendimentos: Atendimento[] }).atendimentos);
-    } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro desconhecido");
-    } finally {
-      setCarregando(false);
-    }
+  if (error) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <Header />
+
+        <div className="text-center text-red-500">
+          <h1 className="text-2xl font-bold">Erro ao carregar os atendimentos</h1>
+          <p className="text-sm text-gray-500">{error.message}</p>
+        </div>
+      </main>
+    )
   }
 
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 720, margin: "40px auto" }}>
-      <h1>AtendeAI — projeto de teste</h1>
-      <p>
-        Tenant: <code>{tenantId}</code>{" "}
-        <button onClick={() => setTenantId(tenantId === "tenant-alfa" ? "tenant-beta" : "tenant-alfa")}>
-          trocar tenant
-        </button>{" "}
-        <button onClick={carregar} disabled={carregando}>
-          {carregando ? "carregando..." : "carregar atendimentos"}
-        </button>
-      </p>
-      {erro && <p style={{ color: "red" }}>{erro}</p>}
-      <ul>
-        {atendimentos.map((a) => (
-          <li key={a.id}>
-            <strong>{a.status}</strong> ({a.duracaoSegundos}s) — {a.transcricao}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main className="bg-gray-200 min-h-screen">
+      <Header />
+
+      <TenantManager tenantId={tenantId} setTenantId={setTenantId} />
+
+      <div className="flex px-8 py-4">
+        <NewServiceDialog tenantId={tenantId} />
+      </div>
+
+      <Services services={services || []} tenantId={tenantId} />
+
+      <Footer />
+    </main>
   );
 }
