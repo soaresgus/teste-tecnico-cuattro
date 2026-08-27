@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "@jest/globals";
+import { describe, it, expect, afterEach, afterAll } from "@jest/globals";
 import * as admin from "firebase-admin";
 import { createAtendimento, updateAtendimentoStatus } from "../src/index";
 
@@ -86,3 +86,7 @@ describe("atualizar status de atendimento", () => {
     expect(after.data()?.status).toBe("novo");
   })
 })
+
+afterAll(async () => {
+  await admin.app().delete();
+});
