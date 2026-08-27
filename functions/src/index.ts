@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { db } from "./admin";
+import { createAtendimentoSchema } from "./schemas/createAtendimentoSchema";
 
 /**
  * Function de exemplo — só para você confirmar que o ambiente está rodando.
@@ -38,17 +39,20 @@ export const listAtendimentos = onCall(async (request) => {
  * Implementação mínima — sem validação de schema.
  */
 export const createAtendimento = onCall(async (request) => {
-  const { tenantId, transcricao, duracaoSegundos } = request.data ?? {};
+  const parsed = createAtendimentoSchema.safeParse(request.data ?? {})
 
-  if (!tenantId || typeof tenantId !== "string") {
-    throw new HttpsError("invalid-argument", "tenantId é obrigatório.");
+  if (!parsed.success) {
+    throw new HttpsError("invalid-argument", parsed.error.issues[0]?.message ?? "Erro ao validar os dados do atendimento");
   }
+
+  const { tenantId, transcricao, duracaoSegundos, prioridade } = parsed.data;
 
   const doc = await db.collection("atendimentos").add({
     tenantId,
-    transcricao: transcricao ?? "",
-    duracaoSegundos: duracaoSegundos ?? 0,
+    transcricao,
+    duracaoSegundos,
     status: "novo",
+    prioridade,
     criadoEm: new Date().toISOString(),
   });
 

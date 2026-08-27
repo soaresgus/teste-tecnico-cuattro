@@ -1,3 +1,4 @@
+import { describe, it, expect, afterAll } from "@jest/globals";
 import * as admin from "firebase-admin";
 
 // Garante um único app inicializado apontando para o emulador
