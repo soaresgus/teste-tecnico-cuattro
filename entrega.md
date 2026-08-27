@@ -24,3 +24,5 @@ A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erro
 - Instalado e configurado TailwindCSS para facilitar e agilizar o processo de estilização.
 
 - Instalado e configurado o React Query para ter um melhor controle de estado e de requisições das Functions.
+
+- Instalado e configurado o React Hook Form + Zod para um formulário robusto de criação de atendimento.

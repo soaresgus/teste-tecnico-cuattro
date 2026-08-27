@@ -4,6 +4,7 @@ import { Header } from "./components/header";
 import { TenantManager } from "./components/tenant-manager";
 import { Services } from "./components/services";
 import { useServices } from "./hooks/useServices";
+import { NewServiceDialog } from "./components/new-service-dialog";
 
 export default function App() {
   const [tenantId, setTenantId] = useState<TenantId>("tenant-alfa");
@@ -27,6 +28,10 @@ export default function App() {
       <Header />
 
       <TenantManager tenantId={tenantId} setTenantId={setTenantId} />
+
+      <div className="flex px-8 py-4">
+        <NewServiceDialog tenantId={tenantId} />
+      </div>
 
       <Services services={services || []} tenantId={tenantId} />
     </main>

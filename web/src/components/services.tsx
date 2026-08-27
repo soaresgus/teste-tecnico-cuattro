@@ -19,7 +19,7 @@ export function Services({ services, tenantId }: ServicesProps) {
     }
 
     return (
-        <section className="grid grid-cols-3 px-8 gap-4">
+        <section className="grid grid-cols-3 px-8 gap-4 pb-8">
             <div className="flex flex-col items-center h-120 overflow-y-auto bg-white rounded-xl p-4 gap-4">
                 <span className="text-lg font-bold bg-gray-200 px-2 py-1 rounded-md">Status: Novo</span>
                 {novoServices.map((service) => (
