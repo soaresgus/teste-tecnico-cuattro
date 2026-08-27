@@ -5,6 +5,7 @@ import { TenantManager } from "./components/tenant-manager";
 import { Services } from "./components/services";
 import { useServices } from "./hooks/useServices";
 import { NewServiceDialog } from "./components/new-service-dialog";
+import { Footer } from "./components/footer";
 
 export default function App() {
   const [tenantId, setTenantId] = useState<TenantId>("tenant-alfa");
@@ -34,6 +35,8 @@ export default function App() {
       </div>
 
       <Services services={services || []} tenantId={tenantId} />
+
+      <Footer />
     </main>
   );
 }
