@@ -1,54 +1,73 @@
-import { useState } from "react";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "./firebase";
-
-type Atendimento = {
-  id: string;
-  transcricao: string;
-  status: string;
-  duracaoSegundos: number;
-};
+import { useEffect, useState } from "react";
+import { Header } from "./components/header";
+import { Services } from "./components/services";
+import { useServices } from "./hooks/useServices";
+import { NewServiceDialog } from "./components/new-service-dialog";
+import { Footer } from "./components/footer";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "./firebase";
+import { LoginForm } from "./components/login-form";
 
 export default function App() {
-  const [tenantId, setTenantId] = useState("tenant-alfa");
-  const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
-  const [carregando, setCarregando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null)
+  const [ready, setReady] = useState(false)
+  const { data: services, error, refetch } = useServices();
 
-  async function carregar() {
-    setCarregando(true);
-    setErro(null);
-    try {
-      const listAtendimentos = httpsCallable(functions, "listAtendimentos");
-      const resp = await listAtendimentos({ tenantId });
-      setAtendimentos((resp.data as { atendimentos: Atendimento[] }).atendimentos);
-    } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro desconhecido");
-    } finally {
-      setCarregando(false);
-    }
+  useEffect(() => {
+    return onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      refetch();
+      setReady(true);
+    })
+  }, [])
+
+  if (!ready) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <Header username={null} isAuthenticated={false} />
+
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Carregando...</h1>
+        </div>
+      </main>
+    )
+  }
+
+  if (!user) {
+    return (
+      <main className="bg-gray-200 min-h-screen flex flex-col">
+        <Header username={null} isAuthenticated={false} />
+        <div className="flex flex-1 justify-center items-center h-full">
+          <LoginForm />
+        </div>
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className="bg-gray-200 min-h-screen">
+        <Header username={null} isAuthenticated={false} />
+
+        <div className="text-center text-red-500">
+          <h1 className="text-2xl font-bold">Erro ao carregar os atendimentos</h1>
+          <p className="text-sm text-gray-500">{error.message}</p>
+        </div>
+      </main>
+    )
   }
 
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 720, margin: "40px auto" }}>
-      <h1>AtendeAI — projeto de teste</h1>
-      <p>
-        Tenant: <code>{tenantId}</code>{" "}
-        <button onClick={() => setTenantId(tenantId === "tenant-alfa" ? "tenant-beta" : "tenant-alfa")}>
-          trocar tenant
-        </button>{" "}
-        <button onClick={carregar} disabled={carregando}>
-          {carregando ? "carregando..." : "carregar atendimentos"}
-        </button>
-      </p>
-      {erro && <p style={{ color: "red" }}>{erro}</p>}
-      <ul>
-        {atendimentos.map((a) => (
-          <li key={a.id}>
-            <strong>{a.status}</strong> ({a.duracaoSegundos}s) — {a.transcricao}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main className="bg-gray-200 min-h-screen">
+      <Header username={user.displayName} isAuthenticated />
+
+      <div className="flex px-8 py-4">
+        <NewServiceDialog />
+      </div>
+
+      <Services services={services || []} />
+
+      <Footer />
+    </main>
   );
 }
