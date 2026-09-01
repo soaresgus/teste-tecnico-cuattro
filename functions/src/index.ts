@@ -95,3 +95,22 @@ export const updateAtendimentoStatus = onCall(async (request) => {
 
   return { id: doc.id, message: "Status do atendimento atualizado com sucesso" };
 })
+
+export const resumoPorTenant = onCall(async (request) => {
+  if (!request.auth || !request.auth.token.tenantId) {
+    throw new HttpsError("unauthenticated", "Usuário não autenticado ou token inválido");
+  }
+
+  const { tenantId } = request.auth.token;
+
+  const snapshot = await db.collection("atendimentos").where("tenantId", "==", tenantId).get();
+
+  const resumo = {
+    totalAtendimentos: snapshot.docs.length,
+    totalAtendimentosNovo: snapshot.docs.filter((doc) => doc.data().status === "novo").length,
+    totalAtendimentosPendente: snapshot.docs.filter((doc) => doc.data().status === "pendente").length,
+    totalAtendimentosResolvido: snapshot.docs.filter((doc) => doc.data().status === "resolvido").length,
+  }
+
+  return { resumo };
+})

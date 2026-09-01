@@ -6,7 +6,7 @@
 
 A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erros, auto-complete ao digitar código e auxílio na escrita de testes; Segue abaixo as principais etapas onde ela foi utilizada:
 
--
+- Foram feitas algumas perguntas sobre o processo de autenticação do Firebase.
 
 ## 2. Modificações extras realizadas (API)
 
