@@ -12,7 +12,7 @@ A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erro
 
 > Seção para listar modificações extras realizadas na API para cumprir os requisitos básicos do desafio.
 
--
+- No teste intermediário não foi necessário modificações extras na API.
 
 ## 3. Modificações extras realizadas (WEB)
 
