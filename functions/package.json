@@ -10,6 +10,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "seed": "ts-node src/seed.ts",
+    "seed-with-hosts": "FIRESTORE_EMULATOR_HOST=localhost:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 npx ts-node src/seed.ts",
     "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 jest --runInBand"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { db } from "./admin";
+import { auth, db } from "./admin";
 
 async function seed() {
   const tenants = [
@@ -39,7 +39,37 @@ async function seed() {
     await db.collection("atendimentos").add(atendimento);
   }
 
-  console.log(`Seed concluído: ${tenants.length} tenants, ${atendimentos.length} atendimentos.`);
+  const users = [
+    {
+      uid: "tenant-alfa-admin",
+      email: "admin@tenant-alfa.com",
+      password: "123456",
+      displayName: "Alfa Telecom Admin",
+      tenantId: "tenant-alfa",
+    },
+    {
+      uid: "tenant-beta-admin",
+      email: "admin@tenant-beta.com",
+      password: "123456",
+      displayName: "Beta Seguros Admin",
+      tenantId: "tenant-beta",
+    },
+  ];
+
+  for (const user of users) {
+    await auth.createUser({
+      uid: user.uid,
+      email: user.email,
+      password: user.password,
+      displayName: user.displayName,
+    });
+
+    await auth.setCustomUserClaims(user.uid, {
+      tenantId: user.tenantId,
+    });
+  }
+
+  console.log(`Seed concluído: ${tenants.length} tenants, ${atendimentos.length} atendimentos, ${users.length} usuários.`);
   process.exit(0);
 }
 
