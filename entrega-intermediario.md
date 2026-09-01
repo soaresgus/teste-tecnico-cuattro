@@ -26,3 +26,9 @@ A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erro
 
 - Iniciei o processo de autenticação instanciando o emulador de Authentication no `firebase.json`, na porta `9099`.
 - Após isso, criei os usuários via seed (`src/seed.ts`), inserindo como **custom claim** o `tenantId` de cada usuário direto no script de seed.
+- Agora em toda e qualquer rota que manipule atendimento, a primeira verificação feita é se o usuário está autenticado e se o token é válido.
+- Agora, nenhuma rota que manipule o atendimento recebe o `tenantId` no payload, o `tenantId` é retornado a partir do token de autenticação do usuário, logo, ações como atualizar o status do atendimento só é permitido se o `tenantId` que retornar do token corresponder com o registrado no documento do Firestore.
+
+> Caso queira testar, **execute o script de seed**, e os usuários criados (2) serão os seguintes:
+admin@tenant-alfa.com / 123456
+admin@tenant-beta.com / 123456
