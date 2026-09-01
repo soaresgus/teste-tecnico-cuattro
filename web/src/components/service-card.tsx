@@ -15,8 +15,7 @@ export function ServiceCard({ service, onChangeStatus }: ServiceCardProps) {
         <div className="bg-zinc-200 rounded-xl p-4 shadow-md w-full gap-2 flex flex-col">
             <h3 className="text-lg font-bold">{service.transcricao}</h3>
             <p className="text-sm text-zinc-800">Duração: {service.duracaoSegundos} segundos</p>
-            <p className={`text-sm text-white px-2 py-1 rounded-md ${priorityColor[service.prioridade]}`}>Prioridade: {service.prioridade}</p>
-            <p className="text-sm text-zinc-800">Tenant: {service.tenantId}</p>
+            <p className={`text-sm text-white px-2 py-1 rounded-md ${priorityColor[service.prioridade]}`}>Prioridade: {service.prioridade || "N/A"}</p>
             <p className="text-sm text-zinc-800">Status: {service.status}</p>
             <span className="text-sm text-zinc-800">Alterar status:</span>
             <select className="border border-zinc-300 rounded-md p-1 bg-zinc-100" onChange={(e) => onChangeStatus(service.id, e.target.value as ServiceStatus, service.tenantId)}>

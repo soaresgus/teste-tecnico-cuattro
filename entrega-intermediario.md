@@ -18,7 +18,7 @@ A IA foi utilizada principalmente para auxílio em dúvidas, resolução de erro
 
 > Seção para listar modificações extras realizadas na API para cumprir com um front-end mínimo para o desafio.
 
--
+- No teste intermediário não foi necessário modificações extras no WEB, apenas foi modificado a estrutura de chamadas HTTP.
 
 ## 4. Documentação dos processos de segurança e autenticação
 

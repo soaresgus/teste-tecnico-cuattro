@@ -3,11 +3,7 @@ import { Dialog, DialogDescription, DialogTitle, DialogContent, DialogHeader, Di
 import { NewServiceForm } from "./new-service-form";
 import { useState } from "react";
 
-interface NewServiceDialogProps {
-    tenantId: string
-}
-
-export function NewServiceDialog({ tenantId }: NewServiceDialogProps) {
+export function NewServiceDialog() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -20,7 +16,7 @@ export function NewServiceDialog({ tenantId }: NewServiceDialogProps) {
                 <DialogDescription>
                     Preencha os campos abaixo para criar um novo atendimento.
                 </DialogDescription>
-                <NewServiceForm tenantId={tenantId} onSuccess={() => setIsOpen(false)} />
+                <NewServiceForm onSuccess={() => setIsOpen(false)} />
             </DialogContent>
         </Dialog>
     )

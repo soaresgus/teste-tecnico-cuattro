@@ -4,11 +4,10 @@ import { useUpdateServiceStatus } from "../hooks/useUpdateServiceStatus";
 
 interface ServicesProps {
     services: Service[]
-    tenantId: string
 }
 
-export function Services({ services, tenantId }: ServicesProps) {
-    const { mutate: updateServiceStatus } = useUpdateServiceStatus(tenantId);
+export function Services({ services }: ServicesProps) {
+    const { mutate: updateServiceStatus } = useUpdateServiceStatus();
 
     const novoServices = services.filter((service) => service.status === "novo");
     const pendenteServices = services.filter((service) => service.status === "pendente");

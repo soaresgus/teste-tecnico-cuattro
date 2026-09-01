@@ -5,26 +5,23 @@ import { Button } from "./ui/button"
 import { useCreateService } from "../hooks/useCreateService"
 
 interface NewServiceFormProps {
-    tenantId: string
     onSuccess: () => void
 }
 
-export function NewServiceForm({ tenantId, onSuccess }: NewServiceFormProps) {
+export function NewServiceForm({ onSuccess }: NewServiceFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: zodResolver(createServiceSchema),
         defaultValues: {
-            tenantId,
             transcricao: "",
             duracaoSegundos: "0",
             prioridade: "media",
         },
     })
 
-    const { mutate: createService, isPending, error } = useCreateService(tenantId);
+    const { mutateAsync: createService, isPending, error } = useCreateService();
 
-    const onSubmit = (data: CreateServiceData) => {
-        createService({
-            tenantId: data.tenantId,
+    const onSubmit = async (data: CreateServiceData) => {
+        await createService({
             duracaoSegundos: data.duracaoSegundos,
             prioridade: data.prioridade,
             transcricao: data.transcricao

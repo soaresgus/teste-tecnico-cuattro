@@ -3,16 +3,16 @@ import { httpsCallable } from "firebase/functions";
 import { functions } from "../firebase";
 import { Service } from "../types/service";
 
-const listAtendimentos = httpsCallable<{ tenantId: string }, { atendimentos: Service[] }>(
+const listAtendimentos = httpsCallable<undefined, { atendimentos: Service[] }>(
   functions,
   "listAtendimentos"
 );
 
-export function useServices(tenantId: string) {
+export function useServices() {
   return useQuery({
-    queryKey: ["atendimentos", tenantId],
+    queryKey: ["atendimentos"],
     queryFn: async () => {
-      const { data } = await listAtendimentos({ tenantId });
+      const { data } = await listAtendimentos();
       return data.atendimentos;
     },
   });
