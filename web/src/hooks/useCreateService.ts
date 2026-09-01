@@ -11,6 +11,7 @@ export function useCreateService() {
         mutationFn: createAtendimento,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["atendimentos"] });
+            queryClient.invalidateQueries({ queryKey: ["services-summary"] });
         },
     })
 }

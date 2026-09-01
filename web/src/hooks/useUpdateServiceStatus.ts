@@ -16,6 +16,7 @@ export function useUpdateServiceStatus() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["atendimentos"] });
+      queryClient.invalidateQueries({ queryKey: ["services-summary"] });
     },
   });
 }
